@@ -12,4 +12,4 @@ let DailySchema = new Schema({
 });
 
 const Daily = mongoose.model('Daily', DailySchema);
-module.exports = Daily;
+export default Daily;
