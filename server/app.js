@@ -1,15 +1,16 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+
+import thechallenger from './routes/challengerRoutes';
 
 let db_url = process.env.DB_URL;
 let mongoDB = process.env.MONGODB_URI || db_url;
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 let db = mongoose.connection;
 db.on('error', console.log.bind(console, 'MongoDb connection error:'));
 
-const thechallenger = require('./routes/challengerRoutes');
 const app = express()
 
 app.use(bodyParser.json());

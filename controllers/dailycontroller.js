@@ -1,1 +1,0 @@
-const Daily = require('../models/dailyModel');
