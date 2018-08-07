@@ -7,7 +7,7 @@
     "start": "npm run build && node ./build/app.js",
     "start:dev": "nodemon ./server/app --exec babel-node --watch ./server",
     "build": "babel ./server -d ./build",
-    "test": "mocha --timeout 10000"
+    "test": "mocha --compilers js:babel-core/register --timeout 10000"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,8 @@
     "mongoose": "^5.2.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.56",
+    "@babel/node": "^7.0.0-beta.56",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
