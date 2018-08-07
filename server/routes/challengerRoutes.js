@@ -6,4 +6,4 @@ import dailyController from '../controllers/dailycontroller';
 
 router.get('/test', monthController.test);
 
-module.exports = router;
+export default router;

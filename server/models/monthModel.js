@@ -7,4 +7,4 @@ let MonthSchema = new Schema({
 });
 
 const Month = mongoose.model('Month', MonthSchema);
-module.exports = Month;
+export default Month;
