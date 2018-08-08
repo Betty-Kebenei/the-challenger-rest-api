@@ -14,7 +14,7 @@ db.on('error', console.log.bind(console, 'MongoDb connection error:'));
 const app = express()
 
 app.use(bodyParser.json());
-app.use('api/v1/month-form', thechallenger)
+app.use('/api/v1/month-form', thechallenger)
 
 const port = 3001;
 app.listen(port, () => {
