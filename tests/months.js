@@ -11,41 +11,35 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-
-
-
-
-
 describe('Months', () => {
+    let months = [
+        {
+            _id: new ObjectId(),
+            fromDate: '1/2/2018',
+            toDate: '1/3/2018'
+        },
+        {
+            _id: new ObjectId(),
+            fromDate: '2/3/2018',
+            toDate: '2/4/2018'
+        } 
+    ];
     beforeEach((done) => {
-        Month.remove({}, () => {
-            done();
-        });
+        Month.remove({}).then(() => {
+            Month.insertMany(months)
+        }).then(() => done())
     });
 
     describe('GET all months', () => {
         it('should Get all months if found', (done) => {
-            let month = new Month ({
-                fromDate: '10/2/2018',
-                toDate: '9/3/2018'
-            });
-            month.save((error, month) => {
-                chai.request(app)
-                .get('api/v1/month-form')
-                .end((error, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    res.body.lenght.should.be.eql(1);
-                    done();
-                });
-            });
-        });
-
-        it('should return an error is no month is found', (done) => {
-            chai.request(app)
-            .get('api/v1/month-form')
+            request(app)
+            .get('/api/v1/month-form')
+            .expect(200)
             .end((error, res) => {
-                res.should.have.status(404);
+                if(error) {
+                    return done(error);
+                }
+                expect(res.length).toBe(2);
                 done();
             });
         });
@@ -84,6 +78,7 @@ describe('Months', () => {
     describe('POST months', () => {
         it('should post the month successfully', (done) => {
             let month = {
+                _id: new ObjectId(),
                 fromDate: '25/2/2018',
                 toDate: '24/3/2018'
             }
@@ -100,7 +95,7 @@ describe('Months', () => {
                     return done(error);
                 }
                 Month.find().then((res) => {
-                    expect(res.length).toBe(1);
+                    expect(res.length).toBe(3);
                     done()
                 }).catch((error) => done(error));
             });
@@ -119,7 +114,7 @@ describe('Months', () => {
                 .toBe(
                     'Month validation failed: fromDate: Path `fromDate` is required., toDate: Path `toDate` is required.')
                 Month.find().then((res) => {
-                    expect(res.length).toBe(0);
+                    expect(res.length).toBe(2);
                     done()
                 }).catch((error) => done(error));
             });
@@ -141,7 +136,7 @@ describe('Months', () => {
                     'Month validation failed: toDate: Path `toDate` is required.'
                 );
                 Month.find().then((res) => {
-                    expect(res.length).toBe(0);
+                    expect(res.length).toBe(2);
                     done()
                 }).catch((error) => done(error));
             });
@@ -163,7 +158,7 @@ describe('Months', () => {
                     'Month validation failed: fromDate: Path `fromDate` is required.'
                 );
                 Month.find().then((res) => {
-                    expect(res.length).toBe(0);
+                    expect(res.length).toBe(2);
                     done()
                 }).catch((error) => done(error));
             });
@@ -174,6 +169,7 @@ describe('Months', () => {
     describe('PUT a month by id' , () => {
         it('should update the month successfully', (done) => {
             let month = new Month ({
+                _id: new ObjectId(),
                 fromDate: '1/10/2018',
                 toDate: '2/11/2018',
             });
