@@ -47,29 +47,27 @@ describe('Months', () => {
 
     describe('GET one month by id', () => {
         it('should return the month', (done) => {
-            let month = new Month ({
-                fromDate: '10/2/2018',
-                toDate: '9/3/2018'
-            });
-            month.save((error, month) => {
-                chai.request(app)
-                .get('api/v1/month-form' + month.id)
-                .send(month)
-                .end((error, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('fromDate');
-                    res.body.should.have.property('toDate');
-                    res.body.lenght.should.be.eql(1);
-                    done();
-                });
+            request(app)
+            .get('/api/v1/month-form/${months[0]._id.toHexString()}')
+            .expect(200)
+            .end((error, res) => {
+                if(error) {
+                    return done(error);
+                }
+                expect(res.length).toBe(1);
+                done();
             });
         });
 
-        it('should return an error if no month is found by id', (done) => {
-            chai.request(app)
-            .get('api/v1/month-form' + month.id)
+        it('should return no month', (done) => {
+            request(app)
+            .get('/api/v1/month-form/1')
+            .expect(404)
             .end((error, res) => {
-                res.should.have.status(404);
+                if(error) {
+                    return done(error);
+                }
+                expect(res.length).toBe(0);
                 done();
             });
         });
