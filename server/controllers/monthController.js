@@ -27,4 +27,13 @@ const getAllMonths = (req, res) => {
     })
 };
 
-export default { test, postMonth, getAllMonths };
+const getAMonth = (req, res) => {
+    Month.findOne(req.params.id, (error, month) => {
+        if(error) {
+            return res.status(404).send(error.message);
+        }
+        res.status(200).json(month);
+    });
+};
+
+export default { test, postMonth, getAllMonths, getAMonth };
