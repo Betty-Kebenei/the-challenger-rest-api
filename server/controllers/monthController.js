@@ -6,12 +6,12 @@ const test = (req, res) => {
 };
 
 const postMonth = (req, res) => {
-    let month = new Month ({ fromDate: req.body.fromDate, todate: req.body.todate });
+    let month = new Month ({ fromDate: req.body.fromDate, toDate: req.body.toDate });
     month.save( (error, month) => {
         if(error) {
-            res.next(error.message, res.status = 400);
+            return res.status(400).send(error.message);
         }
-        res.json({ message: 'Month form successfully created!', month }, res.status = 201);
+        res.status(201).json({ message: 'Month form successfully created!', month });
     });
 };
 

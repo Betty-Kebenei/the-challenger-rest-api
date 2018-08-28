@@ -1,5 +1,8 @@
 import Month  from '../server/models/monthModel';
 
+import expect from 'expect';
+import request from 'supertest';
+import {ObjectId} from 'mongodb';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../server/app';
@@ -8,9 +11,14 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
+
+
+
+
+
 describe('Months', () => {
     beforeEach((done) => {
-        Month.remove({}, (error) => {
+        Month.remove({}, () => {
             done();
         });
     });
@@ -76,17 +84,44 @@ describe('Months', () => {
     describe('POST months', () => {
         it('should post the month successfully', (done) => {
             let month = {
-                fromDate: '10/2/2018',
-                toDate: '9/3/2018'
+                fromDate: '25/2/2018',
+                toDate: '24/3/2018'
             }
-            chai.request(app)
-            .post('api/v1/month-form')
+            let response = { message: 'Month form successfully created!'}
+            request(app)
+            .post('/api/v1/month-form')
             .send(month)
+            .expect(201)
+            .expect((res) => {
+                expect(res.body.message).toBe(response.message)
+            })
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                Month.find().then((res) => {
+                    expect(res.length).toBe(1);
+                    done()
+                }).catch((error) => done(error));
+            });
+        });
+
+        it('should return an error if no values are provided', (done) => {
+            request(app)
+            .post('/api/v1/month-form')
+            .send({})
+            .expect(400)
             .end((error, res) => {
-                res.should.have.status(201);
-                res.body.should.have.property('fromDate');
-                res.body.should.have.property('toDate');
-                done();
+                if(error) {
+                    return done(error);
+                }
+                expect(res.error.text)
+                .toBe(
+                    'Month validation failed: fromDate: Path `fromDate` is required., toDate: Path `toDate` is required.')
+                Month.find().then((res) => {
+                    expect(res.length).toBe(0);
+                    done()
+                }).catch((error) => done(error));
             });
         });
 
@@ -94,30 +129,47 @@ describe('Months', () => {
             let month = {
                 fromDate: '9/3/2018'
             }
-            chai.request(app)
-            .post('api/v1/month-form')
+            request(app)
+            .post('/api/v1/month-form')
             .send(month)
+            .expect(400)
             .end((error, res) => {
-                res.should.have.status(409);
-                res.body.errors.should.have.property('toDate');
-                done();
+                if(error) {
+                    return done(error);
+                }
+                expect(res.error.text).toBe(
+                    'Month validation failed: toDate: Path `toDate` is required.'
+                );
+                Month.find().then((res) => {
+                    expect(res.length).toBe(0);
+                    done()
+                }).catch((error) => done(error));
             });
         });
 
         it('should return an error if no fromDate is provided', (done) => {
             let month = {
-                toDate: '10/2/2018',
+                toDate: '9/3/2018'
             }
-            chai.request(app)
-            .post('api/v1/month-form')
+            request(app)
+            .post('/api/v1/month-form')
             .send(month)
+            .expect(400)
             .end((error, res) => {
-                res.should.have.status(409);
-                res.body.errors.should.have.property('fromDate');
-                done();
+                if(error) {
+                    return done(error);
+                }
+                expect(res.error.text).toBe(
+                    'Month validation failed: fromDate: Path `fromDate` is required.'
+                );
+                Month.find().then((res) => {
+                    expect(res.length).toBe(0);
+                    done()
+                }).catch((error) => done(error));
             });
         });
     });
+  
 
     describe('PUT a month by id' , () => {
         it('should update the month successfully', (done) => {
