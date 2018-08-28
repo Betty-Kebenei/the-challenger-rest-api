@@ -6,5 +6,6 @@ import dailyController from '../controllers/dailycontroller';
 
 router.get('/test', monthController.test);
 router.post('', monthController.postMonth);
+router.get('', monthController.getAllMonths)
 
 export default router;
