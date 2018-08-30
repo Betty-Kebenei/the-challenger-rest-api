@@ -42,18 +42,20 @@ describe('Months', () => {
     describe('GET one month by id', () => {
         it('should return the month', (done) => {
             request(app)
-            .get('/api/v1/month-form/${months[0]._id.toHexString()}')
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}`)
             .expect(200)
             .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
-                expect(res.length).toBe(1);
+                expect(res.body._id).toEqual(months[0]._id.toHexString());
+                expect(res.body.fromDate).toEqual('1/2/2018');
+                expect(res.body.toDate).toEqual('1/3/2018');
                 done();
             });
         });
 
-        it('should return no month', (done) => {
+        it('should return empty object if no month if found', (done) => {
             request(app)
             .get('/api/v1/month-form/1')
             .expect(404)
@@ -61,7 +63,7 @@ describe('Months', () => {
                 if(error) {
                     return done(error);
                 }
-                expect(res.length).toBe(0);
+                expect(res.body).toEqual({});
                 done();
             });
         });
