@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 let DailySchema = new Schema({
     chaptersMorning: {type: Number, required: true, min: 0},
     chaptersOthers: {type: Number, required: true, min: 0},
-    riserTime: {type: Date, required: true},
+    riserTime: {type: String, required: true},
     notes: {type: Boolean, required: true},
     prayer: {type: Boolean, required: true},
     smr: {type: Boolean, required: true},
