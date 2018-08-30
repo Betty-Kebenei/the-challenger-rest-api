@@ -36,4 +36,14 @@ const getAMonth = (req, res) => {
     });
 };
 
-export default { test, postMonth, getAllMonths, getAMonth };
+const updateAMonth = (req, res) => {
+    let month = new Month ({ fromDate: req.body.fromDate, toDate: req.body.toDate });
+    Month.findByIdAndUpdate(req.params.id, month, (error, month) => {
+        if(error) {
+            return res.status(400).send(error.message);
+        }
+        res.status(200).json({ message: 'Month form successfully created!', month });
+    });
+};
+
+export default { test, postMonth, getAllMonths, getAMonth, updateAMonth };

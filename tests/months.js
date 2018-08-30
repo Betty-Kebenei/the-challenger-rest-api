@@ -160,11 +160,11 @@ describe('Months', () => {
 
     describe('PUT a month by id' , () => {
         it('should update the month successfully', (done) => {
-            let month = new Month ({
+            let month = {
                 _id: new ObjectId(),
                 fromDate: '1/10/2018',
                 toDate: '2/11/2018',
-            });
+            };
             let response = { message: 'Month form successfully updated!'}
             request(app)
             .put('/api/v1/month-form/${months[0]._id.toHexString()}')
@@ -182,11 +182,10 @@ describe('Months', () => {
         });
 
         it('should return an error if updated with an empty toDate', (done) => {
-            let month = new Month ({
-                _id: new ObjectId(),
+            let month = {
                 fromDate: '1/10/2018',
                 toDate: '',
-            });
+            };
             request(app)
             .put('/api/v1/month-form/${months[0]._id.toHexString()}')
             .send(month)
@@ -203,11 +202,10 @@ describe('Months', () => {
         });
 
         it('should return an error if updated with an empty fromDate', (done) => {
-            let month = new Month ({
-                _id: new ObjectId(),
+            let month = {
                 fromDate: '',
                 toDate: '1/10/2018',
-            });
+            };
             request(app)
             .put('/api/v1/month-form/${months[0]._id.toHexString()}')
             .send(month)

@@ -8,5 +8,6 @@ router.get('/test', monthController.test);
 router.post('', monthController.postMonth);
 router.get('', monthController.getAllMonths);
 router.get('/:id', monthController.getAMonth);
+router.put('/:id', monthController.updateAMonth);
 
 export default router;
