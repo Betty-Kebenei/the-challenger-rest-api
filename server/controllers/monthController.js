@@ -27,7 +27,7 @@ const getAllMonths = (req, res) => {
 };
 
 const getAMonth = (req, res) => {
-    Month.findOne(req.params.id, (error, month) => {
+    Month.findById(req.params.id, (error, month) => {
         if(error) {
             return res.status(404).send(error.message);
         }
