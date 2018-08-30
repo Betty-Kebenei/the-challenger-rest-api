@@ -18,13 +18,13 @@ describe('Months', () => {
             toDate: '2/4/2018'
         } 
     ];
-    beforeEach((done) => {
-        Month.remove({}).then(() => {
-            Month.insertMany(months)
-        }).then(() => done())
-    });
 
     describe('GET all months', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months)
+            }).then(() => done())
+        });
         it('should Get all months if found', (done) => {
             request(app)
             .get('/api/v1/month-form')
@@ -40,6 +40,11 @@ describe('Months', () => {
     });
 
     describe('GET one month by id', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months)
+            }).then(() => done())
+        });
         it('should return the month', (done) => {
             request(app)
             .get(`/api/v1/month-form/${months[0]._id.toHexString()}`)
@@ -70,6 +75,11 @@ describe('Months', () => {
     });
 
     describe('POST months', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months)
+            }).then(() => done())
+        });
         it('should post the month successfully', (done) => {
             let month = {
                 _id: new ObjectId(),
@@ -163,13 +173,12 @@ describe('Months', () => {
     describe('PUT a month by id' , () => {
         it('should update the month successfully', (done) => {
             let month = {
-                _id: new ObjectId(),
                 fromDate: '1/10/2018',
                 toDate: '2/11/2018',
             };
             let response = { message: 'Month form successfully updated!'}
             request(app)
-            .put('/api/v1/month-form/${months[0]._id.toHexString()}')
+            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
             .send(month)
             .expect(200)
             .expect((res) => {
@@ -189,7 +198,7 @@ describe('Months', () => {
                 toDate: '',
             };
             request(app)
-            .put('/api/v1/month-form/${months[0]._id.toHexString()}')
+            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
             .send(month)
             .expect(400)
             .end((error, res) => {
@@ -209,7 +218,7 @@ describe('Months', () => {
                 toDate: '1/10/2018',
             };
             request(app)
-            .put('/api/v1/month-form/${months[0]._id.toHexString()}')
+            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
             .send(month)
             .expect(400)
             .end((error, res) => {
