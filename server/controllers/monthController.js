@@ -1,5 +1,4 @@
 import Month from '../models/monthModel';
-import { runInNewContext } from 'vm';
 
 const test = (req, res) => {
     res.send('Data to the test controller es6');
@@ -11,7 +10,7 @@ const postMonth = (req, res) => {
         if(error) {
             return res.status(400).send(error.message);
         }
-        res.status(201).json({ message: 'Month form successfully created!', month });
+        return res.status(201).json({ message: 'Month form successfully created!', month });
     });
 };
 
