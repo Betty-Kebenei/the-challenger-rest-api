@@ -48,4 +48,19 @@ const updateADailyData = (req, res) => {
     });
 };
 
-export default { postDaily, getAllDailyData, getADailyData, updateADailyData };
+const deleteADailyData = (req, res) => {
+    Daily.findByIdAndRemove(req.params.id, (error) => {
+        if(error) {
+            return res.status(400).send(error.message);
+        }
+        res.status(200).json({ message: 'Daily data successfully deleted!' });
+    });
+};
+
+export default {
+    postDaily,
+    getAllDailyData,
+    getADailyData,
+    updateADailyData,
+    deleteADailyData
+};
