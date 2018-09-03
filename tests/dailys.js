@@ -276,6 +276,49 @@ describe('Dailys', () => {
                 }).catch((error) => done(error));
             });
         });
+    });
 
+    describe('GET daily data by id', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+    
+        it('should Get daily data  by id if found', (done) => {
+            request(app)
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .expect(200)
+            .end((error, res) => {
+                if(error) {
+                    return done(error);
+                }
+                expect(res.body._id).toEqual(dailys[0]._id.toHexString());
+                expect(res.body.chaptersMorning).toEqual(1);
+                expect(res.body.chaptersOthers).toEqual(0);
+                expect(res.body.riserTime).toEqual('5:00am');
+                expect(res.body.notes).toEqual(false);
+                expect(res.body.prayer).toEqual(false);
+                expect(res.body.smr).toEqual(false);
+                done();
+            });
+        });
+
+        it('should return an error the id does not exist', (done) => {
+            request(app)
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/1`)
+            .expect(404)
+            .end((error, res) => {
+                if(error) {
+                    return done(error);
+                }
+                expect(res.body).toEqual({});
+                done();
+            });
+        });
     });
 });
