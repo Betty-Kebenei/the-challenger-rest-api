@@ -30,4 +30,13 @@ const getAllDailyData = (req, res) => {
     });
 };
 
-export default { postDaily, getAllDailyData };
+const getADailyData = (req, res) => {
+    Daily.findById(req.params.id, (error, data) => {
+        if(error) {
+            return res.status(404).send(error.message);
+        }
+        res.status(200).json(data);
+    });
+};
+
+export default { postDaily, getAllDailyData, getADailyData };
