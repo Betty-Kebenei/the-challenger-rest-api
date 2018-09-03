@@ -51,6 +51,7 @@ describe('Dailys', () => {
             });
         });
     });
+    
     describe('POST daily data', () => {
         beforeEach((done) => {
             Month.remove({}).then(() => {

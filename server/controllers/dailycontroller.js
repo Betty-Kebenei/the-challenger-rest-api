@@ -18,4 +18,16 @@ const postDaily = (req, res) => {
     });
 };
 
-export default { postDaily };
+const getAllDailyData = (req, res) => {
+    Daily.find({}, (error, dailyData) => {
+        if(error) {
+            return res.status(400).send(error.message);
+        }
+        if(dailyData.length > 0) {
+            return res.status(200).json(dailyData);
+        } 
+        res.send("You have no daily data form this month yet!");
+    });
+};
+
+export default { postDaily, getAllDailyData };
