@@ -22,7 +22,7 @@ const getAllMonths = (req, res) => {
         if(months.length > 0) {
             return res.status(200).json(months);
         } 
-        res.send("No have no month forms yet!");
+        res.send("You have no month forms yet!");
     })
 };
 
