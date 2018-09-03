@@ -1,5 +1,5 @@
 import Month  from '../server/models/monthModel';
-import Daily from '../server/controllers/dailycontroller';
+import Daily from '../server/models/dailyModel';
 import app from '../server/app';
 
 import expect from 'expect';
@@ -26,19 +26,21 @@ describe('Dailys', () => {
             month: months[0]._id.toHexString()
         }
     ];
-    // beforeEach((done) => {
-    //     Month.remove({}).then(() => {
-    //         Month.insertMany(months);
-    //     }).then(() => done());
-    //     Daily.remove({}).then(() => {
-    //         Daily.insertMany(dailys);
-    //     }).then(() => done());
-    // });
-
+    
     describe('GET all daily data for a month form', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+    
         it('should Get all daily data if found', (done) => {
             request(app)
-            .get('/api/v1/month-form/${months[0]._id.toHexString()}/daily-data')
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .expect(200)
             .end((error, res) => {
                 if(error) {
@@ -50,6 +52,16 @@ describe('Dailys', () => {
         });
     });
     describe('POST daily data', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+    
         it('should successfully add a daily data', (done) => {
             let data = {
                 _id: new ObjectId(),
@@ -63,10 +75,10 @@ describe('Dailys', () => {
             }
             let response = { message: 'Daily data successfully added!'}
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(201)
-            expect((res) => {
+            .expect((res) => {
                 expect(res.body.message).toBe(response.message)
             })
             .end((error) => {
@@ -82,7 +94,7 @@ describe('Dailys', () => {
 
         it('should return an error if no values are provided', (done) => {
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send({})
             .expect(400)
             .end((error, res) => {
@@ -107,10 +119,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
@@ -135,10 +147,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
@@ -163,10 +175,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
@@ -191,10 +203,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
@@ -219,10 +231,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
@@ -247,10 +259,10 @@ describe('Dailys', () => {
                 month: months[0]._id.toHexString()
             }
             request(app)
-            .post(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data`)
             .send(data)
             .expect(400)
-            .end((error) => {
+            .end((error, res) => {
                 if(error) {
                     return done(error);
                 }
