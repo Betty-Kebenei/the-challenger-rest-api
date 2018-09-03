@@ -276,6 +276,114 @@ describe('Dailys', () => {
                 }).catch((error) => done(error));
             });
         });
+    });
 
+    describe('GET daily data by id', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+    
+        it('should Get daily data  by id if found', (done) => {
+            request(app)
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .expect(200)
+            .end((error, res) => {
+                if(error) {
+                    return done(error);
+                }
+                expect(res.body._id).toEqual(dailys[0]._id.toHexString());
+                expect(res.body.chaptersMorning).toEqual(1);
+                expect(res.body.chaptersOthers).toEqual(0);
+                expect(res.body.riserTime).toEqual('5:00am');
+                expect(res.body.notes).toEqual(false);
+                expect(res.body.prayer).toEqual(false);
+                expect(res.body.smr).toEqual(false);
+                done();
+            });
+        });
+
+        it('should return an error the id does not exist', (done) => {
+            request(app)
+            .get(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/1`)
+            .expect(404)
+            .end((error, res) => {
+                if(error) {
+                    return done(error);
+                }
+                expect(res.body).toEqual({});
+                done();
+            });
+        });
+    });
+
+    describe('PUT a daily data', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+        
+        it('should successfully update a daily data', (done) => {
+            let data = {
+                chaptersMorning: 3,
+                chaptersOthers: 1,
+                riserTime: '4:00am',
+                notes: true,
+                prayer: true,
+                smr: false,
+            }
+            let response = { message: 'Daily data successfully updated!'}
+            request(app)
+            .put(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .send(data)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.message).toBe(response.message)
+            })
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('Delete a daily data', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+        
+        it('should successfully delete a daily data', (done) => {
+            let response = { message: 'Daily data successfully deleted!'}
+            request(app)
+            .delete(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.message).toBe(response.message)
+            })
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                done();
+            });
+        });
     });
 });
