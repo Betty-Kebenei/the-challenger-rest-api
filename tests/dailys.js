@@ -321,4 +321,69 @@ describe('Dailys', () => {
             });
         });
     });
+
+    describe('PUT a daily data', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+        
+        it('should successfully update a daily data', (done) => {
+            let data = {
+                chaptersMorning: 3,
+                chaptersOthers: 1,
+                riserTime: '4:00am',
+                notes: true,
+                prayer: true,
+                smr: false,
+            }
+            let response = { message: 'Daily data successfully updated!'}
+            request(app)
+            .put(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .send(data)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.message).toBe(response.message)
+            })
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('Delete a daily data', () => {
+        beforeEach((done) => {
+            Month.remove({}).then(() => {
+                Month.insertMany(months);
+            }).then(() => {
+                Daily.remove({}).then(() => {
+                    Daily.insertMany(dailys);
+                }).then(() => done());
+            });
+        });
+        
+        it('should successfully delete a daily data', (done) => {
+            let response = { message: 'Daily data successfully deleted!'}
+            request(app)
+            .delete(`/api/v1/month-form/${months[0]._id.toHexString()}/daily-data/${dailys[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.message).toBe(response.message)
+            })
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                done();
+            });
+        });
+    });
 });
