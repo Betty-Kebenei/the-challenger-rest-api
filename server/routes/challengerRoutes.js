@@ -12,5 +12,6 @@ router.put('/:id', monthController.updateAMonth);
 router.post('/:id/daily-data', dailyController.postDaily);
 router.get('/:id/daily-data', dailyController.getAllDailyData);
 router.get('/:id/daily-data/:id', dailyController.getADailyData);
+router.put('/:id/daily-data/:id', dailyController.updateADailyData);
 
 export default router;

@@ -39,4 +39,13 @@ const getADailyData = (req, res) => {
     });
 };
 
-export default { postDaily, getAllDailyData, getADailyData };
+const updateADailyData = (req, res) => {
+    Daily.findByIdAndUpdate(req.params.id, {$set: req.body}, (error) => {
+        if(error) {
+            return res.status(400).send(error.message);
+        }
+        res.status(200).json({ message: 'Daily data successfully updated!' });
+    });
+};
+
+export default { postDaily, getAllDailyData, getADailyData, updateADailyData };
