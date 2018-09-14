@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 import thechallenger from './routes/challengerRoutes';
 
@@ -13,6 +14,7 @@ db.on('error', console.log.bind(console, 'MongoDb connection error:'));
 
 const app = express()
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/v1/month-form', thechallenger)
 
