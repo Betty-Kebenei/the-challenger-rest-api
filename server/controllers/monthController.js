@@ -1,9 +1,5 @@
 import Month from '../models/monthModel';
 
-const test = (req, res) => {
-    res.send('Data to the test controller es6');
-};
-
 const postMonth = (req, res) => {
     let month = new Month ({ fromDate: req.body.fromDate, toDate: req.body.toDate });
     month.save( (error, month) => {
