@@ -18,7 +18,7 @@ const getAllMonths = (req, res) => {
         if(months.length > 0) {
             return res.status(200).json(months);
         } 
-        res.send("You have no month forms yet!");
+        res.send({message: "You have no month forms yet!"});
     })
 };
 
@@ -40,4 +40,4 @@ const updateAMonth = (req, res) => {
     });
 };
 
-export default { test, postMonth, getAllMonths, getAMonth, updateAMonth };
+export default { postMonth, getAllMonths, getAMonth, updateAMonth };
