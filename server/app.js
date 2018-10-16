@@ -1,3 +1,6 @@
+import "babel-core/register";
+import "babel-polyfill";
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -16,7 +19,7 @@ const app = express()
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/api/v1/month-form', thechallenger)
+app.use('/api/v1', thechallenger)
 
 const port = 3001;
 app.listen(port, () => {

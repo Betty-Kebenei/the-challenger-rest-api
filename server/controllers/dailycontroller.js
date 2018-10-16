@@ -26,7 +26,7 @@ const getAllDailyData = (req, res) => {
         if(dailyData.length > 0) {
             return res.status(200).json(dailyData);
         } 
-        res.send("You have no daily data form this month yet!");
+        res.send({message: "You have no daily data form this month yet!"});
     });
 };
 
