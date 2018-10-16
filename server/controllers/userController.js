@@ -5,7 +5,7 @@ async function registerUser (req, res) {
     let user = new User({
         username: req.body.username,
         email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 10)
+        password: await bcrypt.hashSync(req.body.password, 10)
     });
     const emailRequired = 'User validation failed: email: Path `email` is required.';
     const passwordRequired = 'User validation failed: password: Path `password` is required.';
@@ -49,12 +49,8 @@ async function registerUser (req, res) {
 async function loginUser (req, res) {
     const user = await User.findOne({'email': req.body.email})
     if(user){
-        const userWithPassword = await User.findOne({
-            'email': req.body.email,
-            'password': req.body.password
-        });
-        if(userWithPassword) {
-            return res.status(200).json({message: 'User successfully logged in.'})
+        if(bcrypt.compareSync(req.body.password, user.password)){
+            return res.status(200).json({message: 'User successfully logged in.'});
         } else {
             return res.status(400).json({message: 'Wrong password. Try again.'});
         }
