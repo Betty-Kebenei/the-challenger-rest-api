@@ -36,8 +36,21 @@ const registerUser = (req, res) => {
 
 };
 
-const getAUser = (req, res) => {
-
+async function loginUser (req, res) {
+    const user = await User.findOne({'email': req.body.email})
+    if(user){
+        const userWithPassword = await User.findOne({
+            'email': req.body.email,
+            'password': req.body.password
+        });
+        if(userWithPassword) {
+            return res.status(200).json({message: 'User successfully logged in.'})
+        } else {
+            return res.status(400).json({message: 'Wrong password. Try again.'});
+        }
+    } else {
+        return res.status(400).json({message: 'User with that email does not exists. Please register.'});
+    }
 };
 
-export default { registerUser };
+export default { registerUser, loginUser };

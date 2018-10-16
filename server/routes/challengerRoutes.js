@@ -6,6 +6,7 @@ import monthController from '../controllers/monthController';
 import dailyController from '../controllers/dailycontroller';
 
 router.post('/signup', userController.registerUser);
+router.post('/signin', userController.loginUser);
 
 router.post('/month-form', monthController.postMonth);
 router.get('/month-form', monthController.getAllMonths);
