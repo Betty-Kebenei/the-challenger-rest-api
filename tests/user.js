@@ -14,7 +14,7 @@ let users = [
     }
 ] 
 
-describe.only('Register User', () => {
+describe('Register User', () => {
     beforeEach((done) => {
         User.remove({}).then(() => {
             User.insertMany(users)
@@ -133,6 +133,113 @@ describe.only('Register User', () => {
                 expect(res.length).toBe(1);
                 done();
             }).catch((error) => done(error));
+        });
+    });
+});
+
+describe.only('Login User', () => {
+    beforeEach((done) => {
+        User.remove({}).then(() => {
+            User.insertMany(users)
+        }).then(() => done())
+    });
+
+    it('should successfully login a user with username', (done) => {
+        let user = {
+            username: 'berry',
+            password: '@yrreb5cdp'  
+        };
+        let response = {message: 'User successfully logged in.'};
+        request(app)
+        .post('/api/v1/signin')
+        .send(user)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message);
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            done();
+        });
+    });
+
+    it('should successfully login a user with email', (done) => {
+        let user = {
+            email: 'berry@gmail.com',
+            password: '@yrreb5cdp' 
+        };
+        let response = {message: 'User successfully logged in.'};
+        request(app)
+        .post('/api/v1/signin')
+        .send(user)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message);
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            done();
+        });
+    });
+
+    it('should return an error if user is logging in with unexisting username', (done) => {
+        let user = {
+            username: 'terry',
+            password: '@yrreb5cdp' 
+        };
+        let response = {message: 'User with that username does not exists. Please register.'};
+        request(app)
+        .post('/api/v1/signin')
+        .send(user)
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(response.message);
+            done();
+        });
+    });
+
+    it('should return an error if user is logging in with unregistered email', (done) => {
+        let user = {
+            email: 'berryberry@gmail.com',
+            password: '@yrreb5cdp' 
+        };
+        let response = {message: 'User with that email does not exists. Please register.'};
+        request(app)
+        .post('/api/v1/signin')
+        .send(user)
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(response.message);
+            done();
+        });
+    });
+
+    it('should return an error if user is logging in with wrong password', (done) => {
+        let user = {
+            email: 'berry@gmail.com',
+            password: 'wrongpassword' 
+        };
+        let response = {message: 'Wrong password. Try again.'};
+        request(app)
+        .post('/api/v1/signin')
+        .send(user)
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(response.message);
+            done();
         });
     });
 });
