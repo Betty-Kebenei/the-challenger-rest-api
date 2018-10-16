@@ -23,19 +23,17 @@ describe.only('Register User', () => {
 
     it('should register a user successfully', (done) => {
         let user = {
-            _id: new ObjectId(),
             username: 'bgal',
             email: 'bgal@gmail.com',
             password: '@lagb4cdp'
         }
-        let response = {message: 'User successfully created!', user: user};
+        let response = {message: 'User successfully created!', user};
         request(app)
         .post('/api/v1/signup')
         .send(user)
         .expect(201)
         .expect((res) => {
             expect(res.body.message).toBe(response.message);
-            expect(res.body.user).toBe(response.user);
         })
         .end((error) => {
             if(error) {
@@ -50,7 +48,6 @@ describe.only('Register User', () => {
     
     it('should return an error if email is not provided', (done) => {
         let user = {
-            _id: new ObjectId(),
             username: 'bgal',
             password: '@lagb4cdp'
         }
@@ -59,11 +56,11 @@ describe.only('Register User', () => {
         .post('/api/v1/signup')
         .send(user)
         .expect(400)
-        .end((error) => {
+        .end((error, res) => {
             if(error) {
                 return done(error);
             }
-            expect(res.error.text).toBe(response.message);
+            expect(res.error.text).toContain(response.message);
             User.find().then((res) => {
                 expect(res.length).toBe(1);
                 done();
@@ -73,7 +70,6 @@ describe.only('Register User', () => {
 
     it('should return an error if password is not provided', (done) => {
         let user = {
-            _id: new ObjectId(),
             username: 'bgal',
             email: 'bgal@gmail.com'
         }
@@ -82,11 +78,11 @@ describe.only('Register User', () => {
         .post('/api/v1/signup')
         .send(user)
         .expect(400)
-        .end((error) => {
+        .end((error, res) => {
             if(error) {
                 return done(error);
             }
-            expect(res.error.text).toBe(response.message);
+            expect(res.error.text).toContain(response.message);
             User.find().then((res) => {
                 expect(res.length).toBe(1);
                 done();
@@ -96,21 +92,43 @@ describe.only('Register User', () => {
 
     it('should return an error if a duplicate email is used for registration', (done) => {
         let user = {
-            _id: new ObjectId(),
             username: 'someone',
             email: 'berry@gmail.com',
             password: '@someone5cdp' 
         }
-        let response = {message: 'User with that email already exists. Please user another email.'};
+        let response = {message: 'User with that email already exists. Please use another email.'};
         request(app)
         .post('/api/v1/signup')
         .send(user)
         .expect(400)
-        .end((error) => {
+        .end((error, res) => {
             if(error) {
                 return done(error);
             }
-            expect(res.error.text).toBe(response.message);
+            expect(res.error.text).toContain(response.message);
+            User.find().then((res) => {
+                expect(res.length).toBe(1);
+                done();
+            }).catch((error) => done(error));
+        });
+    });
+ 
+    it('should return an error if a duplicate username is used for registration', (done) => {
+        let user = {
+            username: 'berry',
+            email: 'someone@gmail.com',
+            password: '@someone5cdp' 
+        }
+        let response = {message: 'User with that username already exists. Please use another username.'};
+        request(app)
+        .post('/api/v1/signup')
+        .send(user)
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(response.message);
             User.find().then((res) => {
                 expect(res.length).toBe(1);
                 done();
