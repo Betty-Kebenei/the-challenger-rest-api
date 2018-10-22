@@ -42,7 +42,7 @@ async function registerUser (req, res) {
             return res.status(400).json(message);
         } 
         const token = jwt.sign({id: user._id}, 'secret_key', {expiresIn: 86400});
-        return res.status(201).json({message: 'User successfully created!', user, token})
+        return res.status(201).json({message: 'User successfully logged in!', user, token})
     });
 
 
