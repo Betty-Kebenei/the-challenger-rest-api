@@ -1,7 +1,11 @@
 import Month from '../models/monthModel';
 
 const postMonth = (req, res) => {
-    let month = new Month ({ fromDate: req.body.fromDate, toDate: req.body.toDate });
+    let month = new Month ({ 
+        fromDate: req.body.fromDate, 
+        toDate: req.body.toDate,
+        user: req.userId,
+    });
     month.save( (error, month) => {
         if(error) {
             return res.status(400).json(error.message);
@@ -11,7 +15,7 @@ const postMonth = (req, res) => {
 };
 
 const getAllMonths = (req, res) => {
-    Month.find({}, (error, months) => {
+    Month.find({'user': req.userId}, (error, months) => {
         if(error) {
             return res.status(400).json(error.message);
         }

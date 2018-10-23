@@ -19,14 +19,14 @@ const postDaily = (req, res) => {
 };
 
 const getAllDailyData = (req, res) => {
-    Daily.find({}, (error, dailyData) => {
+    Daily.find({'month': req.params.id}, (error, dailyData) => {
         if(error) {
             return res.status(400).send(error.message);
         }
         if(dailyData.length > 0) {
             return res.status(200).json(dailyData);
         } 
-        res.send({message: "You have no daily data form this month yet!"});
+        res.send({message: "You have no daily data in this month form yet!"});
     });
 };
 
