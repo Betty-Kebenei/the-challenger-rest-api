@@ -71,4 +71,13 @@ async function addUserProfile(req, res) {
     });
 }
 
-export default { registerUser, loginUser, addUserProfile };
+async function fetchUser(req, res) {
+    User.findById(req.userId, (error, user) => {
+        if(error) {
+            return res.status(404).json(error.message);
+        }
+        res.status(200).json(user);
+    });
+}
+
+export default { registerUser, loginUser, addUserProfile, fetchUser };
