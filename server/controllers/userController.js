@@ -62,4 +62,13 @@ async function loginUser (req, res) {
     }
 };
 
-export default { registerUser, loginUser };
+async function addUserProfile(req, res) {
+    User.findByIdAndUpdate(req.userId, {$set: req.body}, (error, user) => {
+        if(error) {
+            return res.status(400).json(error.message);
+        }
+        res.status(200).json({ message: 'User profile successfully added!', user });
+    });
+}
+
+export default { registerUser, loginUser, addUserProfile };
