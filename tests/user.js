@@ -1,5 +1,6 @@
 import User from '../server/models/userModel';
 import app from '../server/app';
+import bcrypt from 'bcrypt';
 
 import expect from 'expect';
 import request from 'supertest';
@@ -10,7 +11,7 @@ let users = [
         _id: new ObjectId(),
         username: 'berry',
         email: 'berry@gmail.com',
-        password: '@yrreb5cdp' 
+        password: bcrypt.hashSync('@yrreb5cdp', 10)
     }
 ] 
 
@@ -71,7 +72,8 @@ describe('Register User', () => {
     it('should return an error if password is not provided', (done) => {
         let user = {
             username: 'bgal',
-            email: 'bgal@gmail.com'
+            email: 'bgal@gmail.com',
+            password: ''
         }
         let response = {message: 'User validation failed: Password is required.'};
         request(app)
@@ -158,9 +160,11 @@ describe('Login User', () => {
             expect(res.body.message).toBe(response.message);
         })
         .end((error) => {
+            console.log(error)
             if(error) {
                 return done(error);
             }
+            
             done();
         });
     });

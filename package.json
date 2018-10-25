@@ -7,7 +7,7 @@
     "start": "npm run build && node ./build/app.js",
     "start:dev": "nodemon ./server/app --exec babel-node --watch ./server",
     "build": "babel ./server -d ./build",
-    "test": "mocha tests  --compilers js:babel-core/register --timeout 10000"
+    "test": "mocha tests/user.js  --compilers js:babel-core/register --timeout 10000"
   },
   "author": "",
   "license": "ISC",

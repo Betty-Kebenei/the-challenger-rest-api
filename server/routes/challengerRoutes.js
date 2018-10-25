@@ -9,6 +9,8 @@ import dailyController from '../controllers/dailyController';
 
 router.post('/signup', userController.registerUser);
 router.post('/signin', userController.loginUser);
+router.put('/profile', tokenAuth.tokenAuth, userController.addUserProfile);
+router.get('/user', tokenAuth.tokenAuth, userController.fetchUser);
 
 router.post('/month-form', tokenAuth.tokenAuth, monthController.postMonth);
 router.get('/month-form', tokenAuth.tokenAuth, monthController.getAllMonths);

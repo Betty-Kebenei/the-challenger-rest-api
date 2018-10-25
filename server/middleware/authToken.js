@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const tokenAuth = (req, res, next) => {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['token'];
     if(!token) return res.status(401).send({ message: 'No token provided.' });
 
     jwt.verify(token, 'secret_key', (error, user) => {

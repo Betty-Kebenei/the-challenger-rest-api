@@ -3,6 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 async function registerUser (req, res) {
+    if(!req.body.password) {
+        const message = "User validation failed: Password is required."
+        return res.status(400).json(message); 
+    }
     let user = new User({
         username: req.body.username,
         email: req.body.email,
@@ -62,4 +66,22 @@ async function loginUser (req, res) {
     }
 };
 
-export default { registerUser, loginUser };
+async function addUserProfile(req, res) {
+    User.findByIdAndUpdate(req.userId, {$set: req.body}, (error, user) => {
+        if(error) {
+            return res.status(400).json(error.message);
+        }
+        res.status(200).json({ message: 'User profile successfully added!', user });
+    });
+}
+
+async function fetchUser(req, res) {
+    User.findById(req.userId, (error, user) => {
+        if(error) {
+            return res.status(404).json(error.message);
+        }
+        res.status(200).json(user);
+    });
+}
+
+export default { registerUser, loginUser, addUserProfile, fetchUser };
