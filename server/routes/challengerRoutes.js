@@ -5,7 +5,7 @@ import tokenAuth from '../middleware/authToken';
 
 import userController from '../controllers/userController';
 import monthController from '../controllers/monthController';
-import dailyController from '../controllers/dailyController';
+import dailyController from '../controllers/dailyDataController';
 
 router.post('/signup', userController.registerUser);
 router.post('/signin', userController.loginUser);
