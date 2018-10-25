@@ -8,6 +8,7 @@ const postDaily = (req, res) => {
         notes: req.body.notes,
         prayer: req.body.prayer,
         smr: req.body.smr,
+        dataValid: req.body.dataValid,
         month: req.params.id
     });
     daily.save((error, daily) => {
