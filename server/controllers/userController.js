@@ -3,6 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 async function registerUser (req, res) {
+    if(!req.body.password) {
+        const message = "User validation failed: Password is required."
+        return res.status(400).json(message); 
+    }
     let user = new User({
         username: req.body.username,
         email: req.body.email,
