@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.load();
+
 import "babel-core/register";
 import "babel-polyfill";
 
@@ -7,8 +10,13 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import thechallenger from './routes/challengerRoutes';
+let db_url;
 
-let db_url = process.env.DB_URL;
+if (process.env.NODE_ENV === 'testing') {
+    db_url = process.env.DB_URL_TEST;
+} else {
+    db_url = process.env.DB_URL;
+}
 let mongoDB = process.env.MONGODB_URI || db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
@@ -21,7 +29,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/v1', thechallenger)
 
-const port = 3001;
+const port = process.env.PORT;
 app.listen(port, () => {
     console.log('Server running on port ' + port);
 });

@@ -45,7 +45,7 @@ async function registerUser (req, res) {
             }
             return res.status(400).json(message);
         } 
-        const token = jwt.sign({id: user._id}, 'secret_key', {expiresIn: 86400});
+        const token = jwt.sign({id: user._id}, process.env.SECRET_KEY, {expiresIn: 86400});
         return res.status(201).json({message: 'User successfully created!', user, token})
     });
 
@@ -56,7 +56,7 @@ async function loginUser (req, res) {
     const user = await User.findOne({'email': req.body.email})
     if(user){
         if(bcrypt.compareSync(req.body.password, user.password)){
-            const token = jwt.sign({id: user._id}, 'secret_key', {expiresIn: 86400});
+            const token = jwt.sign({id: user._id}, process.env.SECRET_KEY, {expiresIn: 86400});
             return res.status(200).json({message: 'User successfully logged in.', token});
         } else {
             return res.status(400).json({message: 'Wrong password. Try again.'});

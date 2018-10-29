@@ -7,13 +7,14 @@
     "start": "npm run build && node ./build/app.js",
     "start:dev": "nodemon ./server/app --exec babel-node --watch ./server",
     "build": "babel ./server -d ./build",
-    "test": "mocha tests/user.js  --compilers js:babel-core/register --timeout 10000"
+    "test": "NODE_ENV=testing mocha tests/user.js  --compilers js:babel-core/register"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mongodb": "^3.1.4",
