@@ -56,4 +56,13 @@ const updateAMonth = (req, res) => {
     });
 };
 
-export default { postMonth, getAllMonths, getAMonth, updateAMonth };
+const deleteAMonth= (req, res) => {
+    Month.findByIdAndDelete(req.params.id, (error) => {
+        if(error) {
+            return res.status(400).json(error.message);
+        }
+        res.status(200).json({ message: 'Month form successfully deleted!' });
+    });
+};
+
+export default { postMonth, getAllMonths, getAMonth, updateAMonth, deleteAMonth };
