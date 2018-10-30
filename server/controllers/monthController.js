@@ -51,7 +51,7 @@ const updateAMonth = (req, res) => {
     Month.findByIdAndUpdate(req.params.id, {$set: req.body}, (error) => {
         if(error) {
             return res.status(400).json(error.message);
-        }
+         }
         res.status(200).json({ message: 'Month form successfully updated!' });
     });
 };
