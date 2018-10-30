@@ -1,16 +1,28 @@
 import Month from '../models/monthModel';
 
-const postMonth = (req, res) => {
+async function postMonth (req, res) {
     let month = new Month ({ 
         fromDate: req.body.fromDate, 
         toDate: req.body.toDate,
         user: req.userId,
     });
+    const duplicateFromDate = await Month.find({'user': req.userId, 'fromDate': req.body.fromDate});
+    const duplicateToDate = await Month.find({'user': req.userId, 'toDate': req.body.toDate});
+    
     month.save( (error, month) => {
-        if(error) {
-            return res.status(400).json(error.message);
+        if(duplicateFromDate.length > 0){
+            return res.send({message: 'You already have a month form with that From Date!'});
+        } else if(duplicateToDate.length > 0){
+            return res.send({message: 'You already have a month form with that To Date!'});
+        } else {
+            if(error) {
+                return res.status(400).json(error.message);
+            }
+            return res.status(201).json({ 
+                message: 'Month form successfully created!',
+                month 
+            });
         }
-        return res.status(201).json({ message: 'Month form successfully created!', month });
     });
 };
 
@@ -39,9 +51,18 @@ const updateAMonth = (req, res) => {
     Month.findByIdAndUpdate(req.params.id, {$set: req.body}, (error) => {
         if(error) {
             return res.status(400).json(error.message);
-        }
+         }
         res.status(200).json({ message: 'Month form successfully updated!' });
     });
 };
 
-export default { postMonth, getAllMonths, getAMonth, updateAMonth };
+const deleteAMonth= (req, res) => {
+    Month.findByIdAndDelete(req.params.id, (error) => {
+        if(error) {
+            return res.status(400).json(error.message);
+        }
+        res.status(200).json({ message: 'Month form successfully deleted!' });
+    });
+};
+
+export default { postMonth, getAllMonths, getAMonth, updateAMonth, deleteAMonth };

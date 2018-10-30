@@ -1,235 +1,274 @@
+import User from '../server/models/userModel';
 import Month  from '../server/models/monthModel';
 import app from '../server/app';
+import bcrypt from 'bcrypt';
 
 import expect from 'expect';
 import request from 'supertest';
 import {ObjectId} from 'mongodb';
 
-describe('Months', () => {
-    let months = [
-        {
-            _id: new ObjectId(),
-            fromDate: '1/2/2018',
-            toDate: '1/3/2018'
-        },
-        {
-            _id: new ObjectId(),
-            fromDate: '2/3/2018',
-            toDate: '2/4/2018'
-        } 
-    ];
+let Token = '';
 
-    describe('GET all months', () => {
-        beforeEach((done) => {
-            Month.remove({}).then(() => {
-                Month.insertMany(months)
-            }).then(() => done())
-        });
-        it('should Get all months if found', (done) => {
-            request(app)
-            .get('/api/v1/month-form')
-            .expect(200)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.body.length).toBe(2);
-                done();
-            });
-        });
-    });
+let month = {
+    _id: new ObjectId(),
+    fromDate: '1/2/2018',
+    toDate: '1/3/2018'
+}
 
-    describe('GET one month by id', () => {
-        beforeEach((done) => {
-            Month.remove({}).then(() => {
-                Month.insertMany(months)
-            }).then(() => done())
-        });
-        it('should return the month', (done) => {
-            request(app)
-            .get(`/api/v1/month-form/${months[0]._id.toHexString()}`)
-            .expect(200)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.body._id).toEqual(months[0]._id.toHexString());
-                expect(res.body.fromDate).toEqual('1/2/2018');
-                expect(res.body.toDate).toEqual('1/3/2018');
-                done();
-            });
-        });
+before((done) => {
+    let user = {
+        _id: new ObjectId(),
+        username: 'berry',
+        email: 'berry@gmail.com',
+        password: bcrypt.hashSync('@yrreb5cdp', 10)
+    }
+    User.remove({}).then(() => {
+        request(app)
+        .post('/api/v1/signup')
+        .send(user)
+        .expect((res) => {
+            Token = res.body.token;
+        })
+        .end(()=> done())
+    })
+   
+})
 
-        it('should return empty object if no month if found', (done) => {
-            request(app)
-            .get('/api/v1/month-form/1')
-            .expect(404)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.body).toEqual({});
-                done();
-            });
-        });
-    });
-
-    describe('POST months', () => {
-        beforeEach((done) => {
-            Month.remove({}).then(() => {
-                Month.insertMany(months)
-            }).then(() => done())
-        });
-        it('should post the month successfully', (done) => {
-            let month = {
-                _id: new ObjectId(),
-                fromDate: '25/2/2018',
-                toDate: '24/3/2018'
-            }
-            let response = { message: 'Month form successfully created!'}
+describe('GET all months', () => {
+    beforeEach((done) => {
+        Month.remove({}).then(() => {
             request(app)
             .post('/api/v1/month-form')
             .send(month)
-            .expect(201)
-            .expect((res) => {
-                expect(res.body.message).toBe(response.message)
-            })
+            .set({'token': Token})
             .end((error) => {
                 if(error) {
                     return done(error);
                 }
-                Month.find().then((res) => {
-                    expect(res.length).toBe(3);
-                    done()
-                }).catch((error) => done(error));
+                done()
             });
-        });
-
-        it('should return an error if no values are provided', (done) => {
-            request(app)
-            .post('/api/v1/month-form')
-            .send({})
-            .expect(400)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.error.text)
-                .toBe(
-                    'Month validation failed: fromDate: Path `fromDate` is required., toDate: Path `toDate` is required.')
-                Month.find().then((res) => {
-                    expect(res.length).toBe(2);
-                    done()
-                }).catch((error) => done(error));
-            });
-        });
-
-        it('should return an error if no toDate is provided', (done) => {
-            let month = {
-                fromDate: '9/3/2018'
+        })
+    });
+    it('should Get all months if found', (done) => {
+        request(app)
+        .get('/api/v1/month-form')
+        .set({'token': Token})
+        .expect(200)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
             }
-            request(app)
-            .post('/api/v1/month-form')
-            .send(month)
-            .expect(400)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.error.text).toBe(
-                    'Month validation failed: toDate: Path `toDate` is required.'
-                );
-                Month.find().then((res) => {
-                    expect(res.length).toBe(2);
-                    done()
-                }).catch((error) => done(error));
-            });
-        });
-
-        it('should return an error if no fromDate is provided', (done) => {
-            let month = {
-                toDate: '9/3/2018'
-            }
-            request(app)
-            .post('/api/v1/month-form')
-            .send(month)
-            .expect(400)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.error.text).toBe(
-                    'Month validation failed: fromDate: Path `fromDate` is required.'
-                );
-                Month.find().then((res) => {
-                    expect(res.length).toBe(2);
-                    done()
-                }).catch((error) => done(error));
-            });
+            expect(res.body.length).toBe(1);
+            done();
         });
     });
-  
+});
 
-    describe('PUT a month by id' , () => {
-        it('should update the month successfully', (done) => {
-            let month = {
-                fromDate: '1/10/2018',
-                toDate: '2/11/2018',
-            };
-            let response = { message: 'Month form successfully updated!'}
+describe('GET one month by id', () => {
+    beforeEach((done) => {
+        Month.remove({}).then(() => {
             request(app)
-            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post('/api/v1/month-form')
             .send(month)
-            .expect(200)
-            .expect((res) => {
-                expect(res.body.message).toBe(response.message)
-            })
+            .set({'token': Token})
             .end((error) => {
                 if(error) {
                     return done(error);
                 }
-                done();
+                done()
             });
+        })
+    });
+    it('should return the month', (done) => {
+        request(app)
+        .get(`/api/v1/month-form/${month._id.toHexString()}`)
+        .set({'token': Token})
+        .expect(200)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            done();
         });
+    });
+});
 
-        it('should return an error if updated with an empty toDate', (done) => {
-            let month = {
-                fromDate: '1/10/2018',
-                toDate: '',
-            };
+describe('POST months', () => {
+    beforeEach((done) => {
+        Month.remove({}).then(() => done())
+    });
+    it('should post the month successfully', (done) => {
+        let month = {
+            _id: new ObjectId(),
+            fromDate: '25/2/2018',
+            toDate: '24/3/2018'
+        }
+        let response = { message: 'Month form successfully created!'}
+        request(app)
+        .post('/api/v1/month-form')
+        .send(month)
+        .set({'token': Token})
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            Month.find().then((res) => {
+                expect(res.length).toBe(1);
+                done()
+            }).catch((error) => done(error));
+        });
+    });
+
+    it('should return an error if no values are provided', (done) => {
+        request(app)
+        .post('/api/v1/month-form')
+        .send({})
+        .set({'token': Token})
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text)
+            .toContain(
+                'Month validation failed: fromDate: Path `fromDate` is required., toDate: Path `toDate` is required.')
+            Month.find().then((res) => {
+                expect(res.length).toBe(0);
+                done()
+            }).catch((error) => done(error));
+        });
+    });
+
+    it('should return an error if no toDate is provided', (done) => {
+        let month = {
+            fromDate: '9/3/2018'
+        }
+        request(app)
+        .post('/api/v1/month-form')
+        .send(month)
+        .set({'token': Token})
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(
+                'Month validation failed: toDate: Path `toDate` is required.'
+            );
+            Month.find().then((res) => {
+                expect(res.length).toBe(0);
+                done()
+            }).catch((error) => done(error));
+        });
+    });
+
+    it('should return an error if no fromDate is provided', (done) => {
+        let month = {
+            toDate: '9/3/2018'
+        }
+        request(app)
+        .post('/api/v1/month-form')
+        .send(month)
+        .set({'token': Token})
+        .expect(400)
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            expect(res.error.text).toContain(
+                'Month validation failed: fromDate: Path `fromDate` is required.'
+            );
+            Month.find().then((res) => {
+                expect(res.length).toBe(0);
+                done()
+            }).catch((error) => done(error));
+        });
+    });
+});
+
+
+describe('PUT a month by id' , () => {
+    beforeEach((done) => {
+        Month.remove({}).then(() => {
             request(app)
-            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
+            .post('/api/v1/month-form')
             .send(month)
-            .expect(400)
-            .end((error, res) => {
+            .set({'token': Token})
+            .end((error) => {
                 if(error) {
                     return done(error);
                 }
-                expect(res.error.text).toBe(
-                    'Month validation failed: toDate: Path `toDate` is required.'
-                );
-                done();
+                done()
             });
+        })
+    });
+    it('should update the month successfully', (done) => {
+        let monthUpdate = {
+            fromDate: '1/10/2018',
+            toDate: '2/11/2018',
+        };
+        let response = { message: 'Month form successfully updated!'}
+        request(app)
+        .put(`/api/v1/month-form/${month._id.toHexString()}`)
+        .send(monthUpdate)
+        .set({'token': Token})
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            done();
         });
+    });
 
-        it('should return an error if updated with an empty fromDate', (done) => {
-            let month = {
-                fromDate: '',
-                toDate: '1/10/2018',
-            };
-            request(app)
-            .put(`/api/v1/month-form/${months[0]._id.toHexString()}`)
-            .send(month)
-            .expect(400)
-            .end((error, res) => {
-                if(error) {
-                    return done(error);
-                }
-                expect(res.error.text).toBe(
-                    'Month validation failed: fromDate: Path `fromDate` is required.'
-                );
-                done();
-            });
+    it('should update the month successfully if only the fromDate is updated', (done) => {
+        let monthUpdate = {
+            fromDate: '1/10/2018',
+            toDate: '',
+        };
+        let response = { message: 'Month form successfully updated!'}
+        request(app)
+        .put(`/api/v1/month-form/${month._id.toHexString()}`)
+        .send(monthUpdate)
+        .set({'token': Token})
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            done();
+        });
+    });
+
+    it('should return an error if updated with an empty fromDate', (done) => {
+        let monthUpdate = {
+            fromDate: '',
+            toDate: '1/10/2018',
+        };
+        let response = { message: 'Month form successfully updated!'}
+        request(app)
+        .put(`/api/v1/month-form/${month._id.toHexString()}`)
+        .send(monthUpdate)
+        .set({'token': Token})
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error, res) => {
+            if(error) {
+                return done(error);
+            }
+            done();
         });
     });
 });

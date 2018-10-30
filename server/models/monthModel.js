@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 let MonthSchema = new Schema({
-    fromDate: {type: String, required: true, unique: true},
-    toDate: {type: String, required: true, uniques: true},
+    fromDate: {type: String, required: true},
+    toDate: {type: String, required: true},
     user: {type: Schema.Types.ObjectId, ref: 'User', required: true}
 });
 

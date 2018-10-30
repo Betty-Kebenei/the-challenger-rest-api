@@ -16,6 +16,7 @@ router.post('/month-form', tokenAuth.tokenAuth, monthController.postMonth);
 router.get('/month-form', tokenAuth.tokenAuth, monthController.getAllMonths);
 router.get('/month-form/:id', tokenAuth.tokenAuth, monthController.getAMonth);
 router.put('/month-form/:id', tokenAuth.tokenAuth, monthController.updateAMonth);
+router.delete('/month-form/:id', tokenAuth.tokenAuth, monthController.deleteAMonth);
 
 router.post('/month-form/:id/daily-data', tokenAuth.tokenAuth, dailyController.postDaily);
 router.get('/month-form/:id/daily-data', tokenAuth.tokenAuth, dailyController.getAllDailyData);
