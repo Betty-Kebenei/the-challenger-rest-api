@@ -1,5 +1,8 @@
 [![CircleCI](https://circleci.com/gh/Betty-Kebenei/the-challenger-rest-api/tree/master.svg?style=svg)](https://circleci.com/gh/Betty-Kebenei/the-challenger-rest-api/tree/master)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/e7283770052267d68f65/maintainability)](https://codeclimate.com/github/Betty-Kebenei/the-challenger-rest-api/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/e7283770052267d68f65/test_coverage)](https://codeclimate.com/github/Betty-Kebenei/the-challenger-rest-api/test_coverage)
 # The Challenger REST API
 
 This is a REST API built using nodeJS, Express, and MongoDB.
