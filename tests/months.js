@@ -272,3 +272,37 @@ describe('PUT a month by id' , () => {
         });
     });
 });
+
+describe('DELETE a month by id' , () => {
+    beforeEach((done) => {
+        Month.remove({}).then(() => {
+            request(app)
+            .post('/api/v1/month-form')
+            .send(month)
+            .set({'token': Token})
+            .end((error) => {
+                if(error) {
+                    return done(error);
+                }
+                done()
+            });
+        })
+    });
+
+    it('should delete the month successfully', (done) => {
+        let response = { message: 'Month form successfully deleted!'}
+        request(app)
+        .delete(`/api/v1/month-form/${month._id.toHexString()}`)
+        .set({'token': Token})
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            done();
+        });
+    });
+});
