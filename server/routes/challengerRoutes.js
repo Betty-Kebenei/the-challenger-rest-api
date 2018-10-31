@@ -22,5 +22,6 @@ router.post('/month-form/:id/daily-data', tokenAuth.tokenAuth, dailyController.p
 router.get('/month-form/:id/daily-data', tokenAuth.tokenAuth, dailyController.getAllDailyData);
 router.get('/month-form/:id/daily-data/:id', tokenAuth.tokenAuth, dailyController.getADailyData);
 router.put('/month-form/:id/daily-data/:id', tokenAuth.tokenAuth, dailyController.updateADailyData);
+router.delete('/month-form/:id/daily-data/:id', tokenAuth.tokenAuth, dailyController.deleteADailyData);
 
 export default router;

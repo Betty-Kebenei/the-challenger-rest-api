@@ -81,7 +81,6 @@ describe('Dailys', () => {
                 if(error) {
                     return done(error);
                 }
-                expect(res.body.length).toBe(1);
                 done();
             });
         });
