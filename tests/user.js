@@ -6,6 +6,27 @@ import expect from 'expect';
 import request from 'supertest';
 import {ObjectId} from 'mongodb';
 
+let Token;
+
+before((done) => {
+    let user = {
+        _id: new ObjectId(),
+        username: 'berry',
+        email: 'berry@gmail.com',
+        password: bcrypt.hashSync('@yrreb5cdp', 10)
+    }
+    User.remove({}).then(() => {
+        request(app)
+        .post('/api/v1/signup')
+        .send(user)
+        .expect((res) => {
+            Token = res.body.token;
+        })
+        .end(()=> done())
+    })
+   
+});
+
 let users = [
     {
         _id: new ObjectId(),
@@ -203,6 +224,47 @@ describe('Login User', () => {
                 return done(error);
             }
             expect(res.error.text).toContain(response.message);
+            done();
+        });
+    });
+});
+
+describe('User Profile', () => {
+    let user = {
+        bio: "I love community development...",
+        telephone: "+254 ...",
+        church: "CITAM",
+        photo: "Yet to be uploaded"
+    }
+    let response = { message: 'User profile successfully added!'}
+    it('should update a user profile', (done) => {
+        request(app)
+        .put('/api/v1/profile')
+        .set({'token': Token})
+        .send(user)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.message).toBe(response.message)
+        })
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
+            done();
+        });
+    });
+});
+
+describe('Fetch User', () => {
+    it('should fetch a user successfully', (done) => {
+        request(app)
+        .get('/api/v1/user')
+        .set({'token': Token})
+        .expect(200)
+        .end((error) => {
+            if(error) {
+                return done(error);
+            }
             done();
         });
     });
