@@ -7,7 +7,7 @@
     "start": "npm run build && node ./build/app.js",
     "start:dev": "nodemon ./server/app --exec babel-node --watch ./server",
     "build": "babel ./server -d ./build",
-    "test": "NODE_ENV=testing mocha tests/user.js  --compilers js:babel-core/register --exit"
+    "test": "NODE_ENV=testing nyc -n server --reporter=text mocha tests  --compilers js:babel-core/register --exit"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +36,7 @@
     "expect": "^23.5.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
+    "nyc": "^13.1.0",
     "supertest": "^3.1.0"
   }
 }
